@@ -126,8 +126,9 @@ message ApplicationSyncRequest {
 	required string name = 1;
 	optional string revision = 2;
 	optional bool dryRun = 3;
-	optional bool prune = 4;
-	optional github.com.argoproj.argo_cd.v3.pkg.apis.application.v1alpha1.SyncStrategy strategy = 5;
+	optional bool skipDryRun = 4;
+	optional bool prune = 5;
+	optional github.com.argoproj.argo_cd.v3.pkg.apis.application.v1alpha1.SyncStrategy strategy = 6;
 	repeated github.com.argoproj.argo_cd.v3.pkg.apis.application.v1alpha1.SyncOperationResource resources = 7;
 	repeated string manifests = 8;
 	repeated github.com.argoproj.argo_cd.v3.pkg.apis.application.v1alpha1.Info infos = 9;
@@ -161,7 +162,8 @@ message ApplicationRollbackRequest {
 	required string name = 1;
 	required int64 id = 2;
 	optional bool dryRun = 3;
-	optional bool prune = 4;
+	optional bool skipDryRun = 4;
+	optional bool prune = 5;
 	optional string appNamespace = 6;
 	optional string project = 7;
 }

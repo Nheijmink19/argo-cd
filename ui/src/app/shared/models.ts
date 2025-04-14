@@ -32,6 +32,7 @@ export interface SyncOperation {
     revision: string;
     prune: boolean;
     dryRun: boolean;
+    skipDryRun: boolean;
     resources?: SyncOperationResource[];
 }
 

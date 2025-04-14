@@ -1362,6 +1362,8 @@ func (ctrl *ApplicationController) setAppCondition(app *appv1.Application, condi
 	}
 }
 
+// setOperationState sets the operation state of the application.
+// app contains the state and the sync context.
 func (ctrl *ApplicationController) processRequestedAppOperation(app *appv1.Application) {
 	logCtx := getAppLog(app)
 	var state *appv1.OperationState
