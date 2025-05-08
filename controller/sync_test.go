@@ -256,6 +256,62 @@ func TestAppStateManager_SyncAppState(t *testing.T) {
 	})
 }
 
+func TestSyncAppStateWithSkipDryRun(t *testing.T) {
+	app := newFakeApp()
+	app.Status.OperationState = nil
+	app.Status.History = nil
+
+	defaultProject := &v1alpha1.AppProject{
+		ObjectMeta: metav1.ObjectMeta{
+			Namespace: test.FakeArgoCDNamespace,
+			Name:      "default",
+		},
+	}
+	data := fakeData{
+		apps: []runtime.Object{app, defaultProject},
+		manifestResponse: &apiclient.ManifestResponse{
+			Manifests: []string{},
+			Namespace: test.FakeDestNamespace,
+			Server:    test.FakeClusterURL,
+			Revision:  "abc123",
+		},
+		managedLiveObjs: make(map[kube.ResourceKey]*unstructured.Unstructured),
+	}
+	ctrl := newFakeController(&data, nil)
+
+	// TODO test that if skipdryrun is false the syncAppState is called and fails
+	// Line 232 for failed example
+
+	// syncErrorMsg := "Permission denied"
+	// condition := v1alpha1.ApplicationCondition{
+	// 	Type:    v1alpha1.ApplicationConditionSyncError,
+	// 	Message: syncErrorMsg,
+	// }
+	// app.Status.Conditions = append(app.Status.Conditions, condition)
+
+	// opState := &v1alpha1.OperationState{Operation: v1alpha1.Operation{
+	// 	Sync: &v1alpha1.SyncOperation{
+	// 		SyncOptions: []string{"SkipDryRun=false"},
+	// 	},
+	// }}
+	// ctrl.appStateManager.SyncAppState(app, opState)
+
+	// assert.Equal(t, common.OperationFailed, opState.Phase)
+	// assert.Contains(t, opState.Message, syncErrorMsg)
+
+	// Sync with SkipDryRun=true option
+	opState := &v1alpha1.OperationState{Operation: v1alpha1.Operation{
+		Sync: &v1alpha1.SyncOperation{
+			SyncOptions: []string{"SkipDryRun=true"},
+		},
+	}}
+	ctrl.appStateManager.SyncAppState(app, opState)
+
+	// Ensure the operation succeeds and SkipDryRun is respected
+	assert.Equal(t, common.OperationSucceeded, opState.Phase)
+	assert.Contains(t, opState.Message, "successfully synced")
+}
+
 func TestSyncWindowDeniesSync(t *testing.T) {
 	type fixture struct {
 		project     *v1alpha1.AppProject

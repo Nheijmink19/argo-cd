@@ -1953,6 +1953,7 @@ func NewApplicationSyncCommand(clientOpts *argocdclient.ClientOptions) *cobra.Co
 		force                   bool
 		replace                 bool
 		serverSideApply         bool
+		skipDryRun              bool
 		applyOutOfSyncOnly      bool
 		async                   bool
 		retryLimit              int64
@@ -2185,14 +2186,17 @@ func NewApplicationSyncCommand(clientOpts *argocdclient.ClientOptions) *cobra.Co
 				syncOptionsFactory := func() *application.SyncOptions {
 					syncOptions := application.SyncOptions{}
 					items := make([]string, 0)
+					if applyOutOfSyncOnly {
+						items = append(items, common.SyncOptionApplyOutOfSyncOnly)
+					}
 					if replace {
 						items = append(items, common.SyncOptionReplace)
 					}
 					if serverSideApply {
 						items = append(items, common.SyncOptionServerSideApply)
 					}
-					if applyOutOfSyncOnly {
-						items = append(items, common.SyncOptionApplyOutOfSyncOnly)
+					if skipDryRun {
+						items = append(items, common.SyncOptionSkipDryRun)
 					}
 
 					if len(items) == 0 {
@@ -2303,6 +2307,7 @@ func NewApplicationSyncCommand(clientOpts *argocdclient.ClientOptions) *cobra.Co
 	command.Flags().BoolVar(&serverSideApply, "server-side", false, "Use server-side apply while syncing the application")
 	command.Flags().BoolVar(&applyOutOfSyncOnly, "apply-out-of-sync-only", false, "Sync only out-of-sync resources")
 	command.Flags().BoolVar(&async, "async", false, "Do not wait for application to sync before continuing")
+	command.Flags().BoolVar(&skipDryRun, "skip-dry-run", false, "Skip dry run before applying changes")
 	command.Flags().StringVar(&local, "local", "", "Path to a local directory. When this flag is present no git queries will be made")
 	command.Flags().StringVar(&localRepoRoot, "local-repo-root", "/", "Path to the repository root. Used together with --local allows setting the repository root")
 	command.Flags().StringArrayVar(&infos, "info", []string{}, "A list of key-value pairs during sync process. These infos will be persisted in app.")

@@ -1331,8 +1331,6 @@ type SyncOperation struct {
 	Prune bool `json:"prune,omitempty" protobuf:"bytes,2,opt,name=prune"`
 	// DryRun specifies to perform a `kubectl apply --dry-run` without actually performing the sync
 	DryRun bool `json:"dryRun,omitempty" protobuf:"bytes,3,opt,name=dryRun"`
-	// SkipDryRun specifies to skip the dry run check before resource creation
-	SkipDryRun bool `json:"skipDryRun,omitempty" protobuf:"bytes,4,opt,name=skipDryRun"`
 	// SyncStrategy describes how to perform the sync
 	SyncStrategy *SyncStrategy `json:"syncStrategy,omitempty" protobuf:"bytes,4,opt,name=syncStrategy"`
 	// Resources describes which resources shall be part of the sync
