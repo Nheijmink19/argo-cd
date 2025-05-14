@@ -64,8 +64,19 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
 ```
-
 The dry run will still be executed if the CRD is already present in the cluster.
+
+It is also possible to skip dry run on missing resource for all application resources. You can set the `SkipDryRunOnMissingResource=true`
+sync option to skip dry run on missing resource
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+spec:
+  syncPolicy:
+    syncOptions:
+    - SkipDryRunOnMissingResource=true
+```
+
 
 ## Skip Dry Run for all resources
 
@@ -78,8 +89,6 @@ This only ignores sync issues with resources that aren't created.
 To skip the dry run for missing resource types, use the following annotation:
 
 1) Add `SkipDryRun=true` in manifest
-
-Example:
 
 ```yaml
 apiVersion: argoproj.io/v1alpha1
